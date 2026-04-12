@@ -1,0 +1,127 @@
+/* CamFu Desktop Application Stylesheet */
+
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 12;
+}
+
+/* Menu Bar */
+.menu-bar {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 0 0 1 0;
+}
+
+.menu:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+/* Buttons */
+.button {
+    -fx-padding: 8 20;
+    -fx-font-size: 12;
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-border-radius: 3;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.button:pressed {
+    -fx-background-color: #3d8b40;
+}
+
+/* Table View */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+.table-view .column-header {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.table-view .table-row-cell {
+    -fx-padding: 5;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+/* Text Fields */
+.text-field {
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+    -fx-padding: 5;
+    -fx-font-size: 12;
+}
+
+.text-field:focused {
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+}
+
+/* Combo Box */
+.combo-box {
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+/* Separator */
+.separator {
+    -fx-padding: 5;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: #333333;
+}
+
+/* Tabs */
+.tab {
+    -fx-padding: 10 20;
+    -fx-background-color: #f0f0f0;
+}
+
+.tab:selected {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 0 0 3 0;
+}
+
+/* Split Pane */
+.split-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+}
+
+.split-pane:vertical > .split-pane-divider {
+    -fx-padding: 0 5 0 5;
+    -fx-background-color: #e0e0e0;
+}
+
+/* Scroll Pane */
+.scroll-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+}
+
+.scroll-pane:focused {
+    -fx-border-color: #4CAF50;
+}
+
+/* Alert Dialog */
+.alert .header-panel .header-text {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}

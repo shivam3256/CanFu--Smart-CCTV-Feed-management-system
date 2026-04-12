@@ -1,0 +1,36 @@
+app:
+  name: CamFu AI Engine
+  version: 1.0.0
+  environment: development
+
+server:
+  host: 0.0.0.0
+  port: 5000
+  debug: true
+
+database:
+  host: localhost
+  port: 3306
+  username: root
+  password: Shivam@9797
+  database: camfu_db
+
+ai_engine:
+  model_type: "tensorflow"
+  priority_weights:
+    motion_score: 0.4
+    crowd_density: 0.3
+    unusual_behavior: 0.2
+    time_of_day: 0.1
+  min_confidence: 0.6
+  update_interval: 2
+
+video_processing:
+  frame_rate: 15
+  resolution: [640, 480]
+  batch_size: 4
+
+logging:
+  level: DEBUG
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: logs/ai_engine.log

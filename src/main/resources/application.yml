@@ -1,0 +1,39 @@
+# CamFu Desktop Application Configuration
+
+database:
+  driver: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/camfu_db?useSSL=false&serverTimezone=UTC
+  username: root
+  password: root
+
+ai-engine:
+  python-path: python
+  script-path: ./python/src/main.py
+  host: localhost
+  port: 5000
+  timeout: 30000
+  max-retries: 3
+  auto-start: true
+
+application:
+  name: CamFu Surveillance System
+  version: 1.0.0
+  theme: dark
+
+ui:
+  window-width: 1600
+  window-height: 900
+  refresh-interval: 2000
+  max-feeds-display: 12
+
+monitoring:
+  update-interval: 2000
+  max-feeds: 64
+  priority-threshold: 0.5
+  enable-event-logging: true
+
+logging:
+  level: DEBUG
+  file: logs/camfu.log
+  max-file-size: 10M
+  max-backup-index: 5
