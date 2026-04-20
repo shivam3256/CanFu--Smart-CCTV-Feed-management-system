@@ -29,11 +29,18 @@ public class AIEngineService {
         try {
             logger.info("Starting Python AI Engine...");
             
-            ProcessBuilder pb = new ProcessBuilder(PYTHON_EXECUTABLE, PYTHON_SCRIPT_PATH);
+            ProcessBuilder pb = new ProcessBuilder(PYTHON_EXECUTABLE, "-u", PYTHON_SCRIPT_PATH);
             pb.redirectErrorStream(true);
             
             engineProcess = pb.start();
             isRunning = true;
+            
+            // Ensure Python process dies when Java dies
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                if (engineProcess != null && engineProcess.isAlive()) {
+                    engineProcess.destroy();
+                }
+            }));
 
             // Log output from Python process
             new Thread(() -> {

@@ -95,15 +95,13 @@ public class VLCStreamPanel extends BorderPane {
     private void buildUI() {
         // Panel container
         this.setStyle("-fx-background-color: #0B0F19; -fx-border-color: #1F2937; -fx-border-width: 1;");
-        this.setPrefSize(320, 240);
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.setCache(true);
         this.setCacheHint(javafx.scene.CacheHint.SPEED);
 
         // ImageView — hardware path, no bilinear interpolation (saves GPU fill rate)
         imageView = new ImageView();
-        imageView.setFitWidth(320);
-        imageView.setFitHeight(240);
-        imageView.setPreserveRatio(false);
+        imageView.setPreserveRatio(true);
         imageView.setSmooth(false);                         // skip bilinear filter
         imageView.setCache(true);
         imageView.setCacheHint(javafx.scene.CacheHint.SPEED);
@@ -117,7 +115,13 @@ public class VLCStreamPanel extends BorderPane {
         StackPane stack = new StackPane(imageView, statusLabel);
         StackPane.setAlignment(statusLabel, Pos.TOP_RIGHT);
         stack.setStyle("-fx-background-color: #000000;"); // Black background for actual video letterboxing
-        stack.setPrefSize(320, 240);
+        stack.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        stack.setMinSize(0, 0);
+        stack.setPrefSize(0, 0);
+
+        // Bind image size to stack pane size
+        imageView.fitWidthProperty().bind(stack.widthProperty());
+        imageView.fitHeightProperty().bind(stack.heightProperty());
 
         this.setCenter(stack);
     }

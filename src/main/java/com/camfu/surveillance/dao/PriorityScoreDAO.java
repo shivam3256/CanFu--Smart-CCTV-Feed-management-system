@@ -25,7 +25,7 @@ public class PriorityScoreDAO {
         List<PriorityScore> scores = new ArrayList<>();
         String query = "SELECT ps.*, c.camera_name FROM priority_scores ps " +
                       "JOIN cameras c ON ps.camera_id = c.id " +
-                      "WHERE ps.timestamp = (SELECT MAX(timestamp) FROM priority_scores WHERE camera_id = ps.camera_id) " +
+                      "WHERE ps.id IN (SELECT MAX(id) FROM priority_scores GROUP BY camera_id) " +
                       "ORDER BY ps.overall_priority_score DESC";
 
         try (Connection conn = DatabaseConnectionPool.getConnection();

@@ -13,6 +13,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from flask import Flask
 from flask_cors import CORS
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 def load_config():
@@ -45,6 +48,11 @@ def create_app():
             'service': 'CamFu AI Engine',
             'version': config.get('app', {}).get('version', '1.0.0')
         }, 200
+    from core.engine import CamFuEngine
+    
+    # Initialize and start the background engine
+    ai_engine = CamFuEngine(config)
+    ai_engine.start()
     
     return app
 
@@ -60,7 +68,7 @@ def main():
     debug = server_config.get('debug', False)
     
     print(f"Starting CamFu AI Engine on {host}:{port}")
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=port, debug=debug, use_reloader=False)
 
 
 if __name__ == '__main__':

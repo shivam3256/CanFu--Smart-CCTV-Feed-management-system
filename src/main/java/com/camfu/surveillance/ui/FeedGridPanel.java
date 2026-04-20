@@ -48,8 +48,7 @@ public class FeedGridPanel {
     // ─────────────────────────────────────────────────────────────────────────
 
     private VBox       panel;
-    private FlowPane   flowPane;
-    private ScrollPane scrollPane;
+    private GridPane   gridPane;
 
     private CameraService cameraService;
 
@@ -82,19 +81,14 @@ public class FeedGridPanel {
 
         HBox topBar = buildTopBar();
 
-        flowPane = new FlowPane();
-        flowPane.setHgap(6);
-        flowPane.setVgap(6);
-        flowPane.setPadding(new Insets(8));
-        flowPane.setStyle("-fx-background-color: transparent;");
+        gridPane = new GridPane();
+        gridPane.setHgap(6);
+        gridPane.setVgap(6);
+        gridPane.setPadding(new Insets(8));
+        gridPane.setStyle("-fx-background-color: transparent;");
 
-        scrollPane = new ScrollPane(flowPane);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        panel.getChildren().addAll(topBar, scrollPane);
+        VBox.setVgrow(gridPane, Priority.ALWAYS);
+        panel.getChildren().addAll(topBar, gridPane);
 
         // Load feeds in background (DB access must not block JavaFX thread)
         loadFeeds();
@@ -142,27 +136,55 @@ public class FeedGridPanel {
         }, "FeedLoader").start();
     }
 
-    /** Render camera tiles in the grid (called on JavaFX thread). */
     private void displayFeeds(List<Camera> cameras) {
-        flowPane.getChildren().clear();
+        gridPane.getChildren().clear();
+        gridPane.getColumnConstraints().clear();
+        gridPane.getRowConstraints().clear();
         activePanels.clear();
 
         if (cameras.isEmpty()) {
             Label empty = new Label("No active cameras found.\nUse Cameras → Add Camera to add one.");
             empty.setStyle("-fx-text-fill: #888; -fx-font-size: 13px;");
             empty.setWrapText(true);
-            flowPane.getChildren().add(empty);
+            gridPane.add(empty, 0, 0);
             return;
         }
 
+        int total = cameras.size();
+        int cols = (int) Math.ceil(Math.sqrt(total));
+        int rows = (int) Math.ceil((double) total / cols);
+
+        for (int i = 0; i < cols; i++) {
+            ColumnConstraints cc = new ColumnConstraints();
+            cc.setPercentWidth(100.0 / cols);
+            cc.setHgrow(Priority.ALWAYS);
+            gridPane.getColumnConstraints().add(cc);
+        }
+
+        for (int i = 0; i < rows; i++) {
+            RowConstraints rc = new RowConstraints();
+            rc.setPercentHeight(100.0 / rows);
+            rc.setVgrow(Priority.ALWAYS);
+            gridPane.getRowConstraints().add(rc);
+        }
+
+        int col = 0, row = 0;
         for (Camera camera : cameras) {
             if (shuttingDown) break;
 
             VBox tile = buildTile(camera);
-            flowPane.getChildren().add(tile);
+            GridPane.setHgrow(tile, Priority.ALWAYS);
+            GridPane.setVgrow(tile, Priority.ALWAYS);
+            gridPane.add(tile, col, row);
+
+            col++;
+            if (col >= cols) {
+                col = 0;
+                row++;
+            }
         }
 
-        logger.info("Grid loaded — {} camera(s) using dynamic FlowPane layout", cameras.size());
+        logger.info("Grid loaded — {} camera(s) in {}x{} dynamic grid", cameras.size(), cols, rows);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -176,12 +198,14 @@ public class FeedGridPanel {
     private VBox buildTile(Camera camera) {
         VBox tile = new VBox(0);
         tile.setStyle("-fx-background-color: #1F2937; -fx-border-color: #374151; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;");
-        tile.setPrefWidth(TILE_W);
-        tile.setPrefHeight(TILE_H);
+        tile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        tile.setMinSize(0, 0);
+        tile.setPrefSize(0, 0);
 
         // Stream panel — handles its own capture + render loop
         VLCStreamPanel streamPanel = new VLCStreamPanel(camera);
-        streamPanel.setPrefSize(TILE_W, TILE_H - 24);
+        streamPanel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        VBox.setVgrow(streamPanel, Priority.ALWAYS);
         activePanels.put(camera.getId(), streamPanel);
 
         // Bottom info strip
@@ -221,7 +245,11 @@ public class FeedGridPanel {
             }
         }
         activePanels.clear();
-        Platform.runLater(() -> flowPane.getChildren().clear());
+        Platform.runLater(() -> {
+            gridPane.getChildren().clear();
+            gridPane.getColumnConstraints().clear();
+            gridPane.getRowConstraints().clear();
+        });
         logger.info("All feeds stopped");
     }
 

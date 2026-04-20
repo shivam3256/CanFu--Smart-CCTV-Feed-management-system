@@ -36,6 +36,7 @@ public class CamFuApplication extends Application {
                 logger.warn("VLC init skipped: {}", e.getMessage());
             }
 
+            primaryStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
             primaryStage.setWidth(1600);
             primaryStage.setHeight(900);
             primaryStage.setX(100);

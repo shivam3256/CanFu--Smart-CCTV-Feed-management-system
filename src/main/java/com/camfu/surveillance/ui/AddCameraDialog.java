@@ -24,10 +24,14 @@ public class AddCameraDialog {
     private TextField urlField;
     private ComboBox<String> resolutionBox;
     private Runnable onSaveCallback;
+    
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     public AddCameraDialog(Window owner, CameraService cameraService) {
         this.cameraService = cameraService;
         this.stage = new Stage();
+        this.stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
         this.stage.initOwner(owner);
         this.stage.setTitle("Add Camera");
         this.stage.setWidth(400);
@@ -39,6 +43,9 @@ public class AddCameraDialog {
     }
 
     public void show() {
+        javafx.scene.layout.BorderPane root = new javafx.scene.layout.BorderPane();
+        root.setStyle("-fx-background-color: #0B0F19; -fx-border-color: #374151; -fx-border-width: 1;");
+
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(15));
         gridPane.setHgap(10);
@@ -75,11 +82,9 @@ public class AddCameraDialog {
 
         // Buttons
         Button saveButton = new Button("Save");
-        saveButton.setStyle("-fx-padding: 8 30");
         saveButton.setOnAction(e -> saveCameraAction());
 
         Button cancelButton = new Button("Cancel");
-        cancelButton.setStyle("-fx-padding: 8 30");
         cancelButton.setOnAction(e -> stage.close());
 
         GridPane buttonPane = new GridPane();
@@ -93,9 +98,63 @@ public class AddCameraDialog {
         gridPane.add(buttonPane, 0, 5);
         GridPane.setColumnSpan(buttonPane, 2);
 
-        Scene scene = new Scene(gridPane);
+        root.setTop(createTitleBar());
+        root.setCenter(gridPane);
+
+        Scene scene = new Scene(root);
+        try {
+            scene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
+        } catch (Exception e) {
+            logger.warn("Could not load stylesheet", e);
+        }
         stage.setScene(scene);
         stage.show();
+    }
+
+    private javafx.scene.layout.HBox createTitleBar() {
+        javafx.scene.layout.HBox titleBar = new javafx.scene.layout.HBox();
+        titleBar.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        titleBar.setPadding(new Insets(8, 10, 8, 15));
+        titleBar.setStyle("-fx-background-color: #111827; -fx-border-color: #1F2937; -fx-border-width: 0 0 1 0;");
+
+        javafx.scene.layout.HBox titleContent = new javafx.scene.layout.HBox(10);
+        titleContent.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        try {
+            var logoStream = getClass().getResourceAsStream("/images/logo.png");
+            if (logoStream != null) {
+                javafx.scene.image.ImageView logoView = new javafx.scene.image.ImageView(new javafx.scene.image.Image(logoStream));
+                logoView.setFitHeight(18);
+                logoView.setPreserveRatio(true);
+                titleContent.getChildren().add(logoView);
+            }
+        } catch (Exception e) {}
+
+        Label titleLabel = new Label("Add Camera");
+        titleLabel.setStyle("-fx-text-fill: #E2E8F0; -fx-font-weight: bold; -fx-font-size: 13px;");
+        titleContent.getChildren().add(titleLabel);
+
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        javafx.scene.layout.HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #9CA3AF; -fx-font-weight: bold; -fx-padding: 2 10; -fx-cursor: hand;");
+        closeBtn.setOnAction(e -> stage.close());
+        closeBtn.setOnMouseEntered(e -> closeBtn.setStyle("-fx-background-color: #E11D48; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-padding: 2 10; -fx-cursor: hand;"));
+        closeBtn.setOnMouseExited(e -> closeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #9CA3AF; -fx-font-weight: bold; -fx-padding: 2 10; -fx-cursor: hand;"));
+
+        titleBar.getChildren().addAll(titleContent, spacer, closeBtn);
+
+        titleBar.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+        titleBar.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+
+        return titleBar;
     }
 
     private void saveCameraAction() {
@@ -134,6 +193,7 @@ public class AddCameraDialog {
 
     private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        styleAlert(alert);
         alert.setTitle(title);
         alert.setHeaderText(title);
         alert.setContentText(message);
@@ -142,9 +202,17 @@ public class AddCameraDialog {
 
     private void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        styleAlert(alert);
         alert.setTitle(title);
         alert.setHeaderText(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    
+    private void styleAlert(Alert alert) {
+        try {
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane");
+        } catch (Exception e) {}
     }
 }
