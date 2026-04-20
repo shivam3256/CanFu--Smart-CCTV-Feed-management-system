@@ -1,6 +1,7 @@
 package com.camfu.surveillance;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import com.camfu.surveillance.ui.MainWindow;
 import com.camfu.surveillance.service.AIEngineService;
@@ -9,8 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main entry point for CamFu Intelligent Surveillance Desktop Application
- * JavaFX-based desktop application with integrated Python AI engine
+ * Main entry point for CamFu Intelligent Surveillance Desktop Application.
+ *
+ * CRITICAL FIX: The original code called aiEngineService.startEngine() directly
+ * on the JavaFX Application Thread. That method polls /health with Thread.sleep(1000)
+ * for up to 30 seconds — freezing the entire UI ("Not Responding") on every launch.
+ *
+ * Fix: AI engine is started on a background thread. The UI shows immediately.
+ * A status indicator in the window updates once the engine is ready.
  */
 public class CamFuApplication extends Application {
     private static final Logger logger = LoggerFactory.getLogger(CamFuApplication.class);
@@ -20,30 +27,42 @@ public class CamFuApplication extends Application {
     public void start(Stage primaryStage) {
         try {
             logger.info("Starting CamFu Surveillance System...");
-            
-            // Initialize VLC streaming
+
+            // VLC init is fast (native library load) — safe to do on FX thread
             logger.info("Initializing VLC streaming support...");
-            VLCStreamPlayer.initializeVLC();
-            
-            // Configure primary stage for visibility
+            try {
+                VLCStreamPlayer.initializeVLC();
+            } catch (Exception e) {
+                logger.warn("VLC init skipped: {}", e.getMessage());
+            }
+
             primaryStage.setWidth(1600);
             primaryStage.setHeight(900);
             primaryStage.setX(100);
             primaryStage.setY(100);
-            
-            // Initialize AI Engine Service
+
+            // Build and show the window IMMEDIATELY — no blocking
             aiEngineService = new AIEngineService();
-            aiEngineService.startEngine();
-            
-            // Create and show main window
             MainWindow mainWindow = new MainWindow(primaryStage, aiEngineService);
             mainWindow.show();
-            
-            // Ensure window is in focus and visible
+
             primaryStage.toFront();
             primaryStage.requestFocus();
-            
+
+            // Start AI engine in background — does NOT block the FX thread
+            Thread aiStartThread = new Thread(() -> {
+                try {
+                    aiEngineService.startEngine();
+                    logger.info("AI Engine ready (background startup complete)");
+                } catch (Exception e) {
+                    logger.warn("AI Engine startup failed (non-fatal): {}", e.getMessage());
+                }
+            }, "AIEngineStarter");
+            aiStartThread.setDaemon(true);
+            aiStartThread.start();
+
             logger.info("CamFu application started successfully");
+
         } catch (Exception e) {
             logger.error("Failed to start CamFu application", e);
             System.exit(1);
@@ -53,20 +72,14 @@ public class CamFuApplication extends Application {
     @Override
     public void stop() {
         logger.info("Shutting down CamFu application...");
-        
-        // Shutdown VLC streaming
         try {
             VLCStreamPlayer.shutdownVLC();
-            logger.info("VLC streaming shutdown complete");
         } catch (Exception e) {
-            logger.warn("Error shutting down VLC: " + e.getMessage());
+            logger.warn("Error shutting down VLC: {}", e.getMessage());
         }
-        
-        // Stop AI Engine Service
         if (aiEngineService != null) {
             aiEngineService.stopEngine();
         }
-        
         logger.info("CamFu application stopped");
     }
 

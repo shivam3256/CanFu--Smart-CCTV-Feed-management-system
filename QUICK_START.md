@@ -2,32 +2,36 @@
 
 ## Installation & Launch
 
-### Windows Users
-1. Double-click: **RUN_CAMFU_WITH_VLC.bat**
-   - Requires: Java 11+, VLC installed
-
-### macOS/Linux Users
-1. Open terminal and run:
-   ```bash
-   chmod +x run_camfu_with_vlc.sh
-   ./run_camfu_with_vlc.sh
+### Windows Users (Easiest)
+1. Open PowerShell in the project folder
+2. Run:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File "run-camfu.ps1"
    ```
-   - Requires: Java 11+, VLC installed
+
+### Requirements
+- **Java 21+** (or Java 11+ for older versions)
+- **Python 3.9+** (for AI frame analysis - optional)
+- **FFmpeg** (for RTSP streams - optional)
 
 ---
 
-## Minimal 5-Minute Setup
+## Minimal 3-Step Launch
 
-### Step 1: Install Prerequisites
-- **Java 11+**: https://www.oracle.com/java/technologies/downloads/
-- **VLC**: https://www.videolan.org/vlc/
+### Step 1: Build (if not already built)
+```powershell
+mvn clean package -DskipTests
+```
 
 ### Step 2: Launch CamFu
-```bash
-# Windows (Command Prompt)
-RUN_CAMFU_WITH_VLC.bat
+```powershell
+powershell -ExecutionPolicy Bypass -File "run-camfu.ps1"
+```
 
-# macOS/Linux (Terminal)
+### Step 3: View Camera Feeds
+- Application window opens with live MJPEG frame display
+- Cameras stream at ~2 FPS per feed
+- No VLC installation required
 ./run_camfu_with_vlc.sh
 ```
 

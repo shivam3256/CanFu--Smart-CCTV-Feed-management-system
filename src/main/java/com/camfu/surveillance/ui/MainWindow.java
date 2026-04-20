@@ -34,7 +34,7 @@ public class MainWindow {
     public void show() {
         try {
             BorderPane root = new BorderPane();
-            root.setStyle("-fx-font-family: 'Segoe UI'");
+            // Styles are handled by application.css
 
             // Top menu bar
             root.setTop(createMenuBar());
@@ -132,7 +132,7 @@ public class MainWindow {
     private HBox createStatusBar() {
         HBox statusBar = new HBox();
         statusBar.setPadding(new Insets(5));
-        statusBar.setStyle("-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0");
+        statusBar.setStyle("-fx-border-color: #1F2937; -fx-border-width: 1 0 0 0; -fx-background-color: #111827;");
 
         Label statusLabel = new Label("Ready");
         Label aiEngineStatus = new Label("AI Engine: Connecting...");

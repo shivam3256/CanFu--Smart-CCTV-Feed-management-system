@@ -1,127 +1,235 @@
-/* CamFu Desktop Application Stylesheet */
+/* CamFu Desktop Application Stylesheet - Industry Grade Dark Theme */
 
 .root {
-    -fx-font-family: 'Segoe UI', Arial, sans-serif;
-    -fx-font-size: 12;
+    -fx-font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #0B0F19;
+    -fx-text-fill: #E2E8F0;
 }
 
 /* Menu Bar */
 .menu-bar {
-    -fx-background-color: #f0f0f0;
-    -fx-border-color: #cccccc;
+    -fx-background-color: #111827;
+    -fx-border-color: #1F2937;
     -fx-border-width: 0 0 1 0;
+    -fx-padding: 2 5;
+}
+
+.menu-bar .label {
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 13px;
 }
 
 .menu:hover {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: #1F2937;
+    -fx-background-radius: 4;
+}
+
+.menu:showing {
+    -fx-background-color: #374151;
+    -fx-background-radius: 4;
+}
+
+.menu-item {
+    -fx-padding: 5 15;
+}
+
+.menu-item .label {
+    -fx-text-fill: #E2E8F0;
+}
+
+.menu-item:focused {
+    -fx-background-color: #2563EB;
+}
+
+.context-menu {
+    -fx-background-color: #1F2937;
+    -fx-border-color: #374151;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 5);
 }
 
 /* Buttons */
 .button {
     -fx-padding: 8 20;
-    -fx-font-size: 12;
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
-    -fx-border-radius: 3;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-color: #2563EB;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.3), 8, 0, 0, 2);
+    -fx-transition: -fx-background-color 0.2s;
 }
 
 .button:hover {
-    -fx-background-color: #45a049;
+    -fx-background-color: #3B82F6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.4), 10, 0, 0, 3);
 }
 
 .button:pressed {
-    -fx-background-color: #3d8b40;
+    -fx-background-color: #1D4ED8;
+    -fx-effect: none;
 }
 
 /* Table View */
 .table-view {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
+    -fx-background-color: #111827;
+    -fx-border-color: #1F2937;
     -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
 
-.table-view .column-header {
-    -fx-background-color: #e0e0e0;
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-}
-
-.table-view .table-row-cell {
-    -fx-padding: 5;
-    -fx-border-color: #f0f0f0;
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: #1F2937;
     -fx-border-width: 0 0 1 0;
 }
 
-.table-view .table-row-cell:selected {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
+.table-view .column-header {
+    -fx-background-color: #1F2937;
+    -fx-size: 38;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #9CA3AF;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+}
+
+.table-row-cell {
+    -fx-background-color: #111827;
+    -fx-border-color: #1F2937;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8 5;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #1E293B;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #2563EB;
+    -fx-background-insets: 0;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #FFFFFF;
+}
+
+.table-view .cell {
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 14px;
+}
+
+/* Scroll Pane & Split Pane */
+.split-pane {
+    -fx-background-color: #0B0F19;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: #1F2937;
+    -fx-padding: 0 2 0 2;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Scroll Bars */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .track, .scroll-bar:horizontal .track {
+    -fx-background-color: #111827;
+    -fx-border-color: transparent;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb {
+    -fx-background-color: #374151;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .thumb:hover, .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #4B5563;
 }
 
 /* Text Fields */
 .text-field {
-    -fx-border-color: #cccccc;
-    -fx-border-width: 1;
-    -fx-padding: 5;
-    -fx-font-size: 12;
+    -fx-background-color: #1F2937;
+    -fx-text-fill: #E2E8F0;
+    -fx-border-color: #374151;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
 }
 
 .text-field:focused {
-    -fx-border-color: #4CAF50;
-    -fx-border-width: 2;
+    -fx-border-color: #3B82F6;
+    -fx-background-color: #111827;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 5, 0, 0, 0);
 }
 
 /* Combo Box */
 .combo-box {
-    -fx-border-color: #cccccc;
-    -fx-border-width: 1;
+    -fx-background-color: #1F2937;
+    -fx-border-color: #374151;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #E2E8F0;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #1F2937;
+    -fx-border-color: #374151;
 }
 
 /* Separator */
-.separator {
-    -fx-padding: 5;
+.separator *.line {
+    -fx-border-color: #1F2937;
+    -fx-border-width: 1 0 0 0;
 }
 
 /* Labels */
 .label {
-    -fx-text-fill: #333333;
+    -fx-text-fill: #E2E8F0;
 }
 
-/* Tabs */
-.tab {
-    -fx-padding: 10 20;
-    -fx-background-color: #f0f0f0;
+/* Alert Dialogs */
+.dialog-pane {
+    -fx-background-color: #111827;
 }
 
-.tab:selected {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #4CAF50;
-    -fx-border-width: 0 0 3 0;
+.dialog-pane .label {
+    -fx-text-fill: #E2E8F0;
 }
 
-/* Split Pane */
-.split-pane {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
+.dialog-pane .header-panel {
+    -fx-background-color: #1F2937;
 }
 
-.split-pane:vertical > .split-pane-divider {
-    -fx-padding: 0 5 0 5;
-    -fx-background-color: #e0e0e0;
-}
-
-/* Scroll Pane */
-.scroll-pane {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-}
-
-.scroll-pane:focused {
-    -fx-border-color: #4CAF50;
-}
-
-/* Alert Dialog */
-.alert .header-panel .header-text {
-    -fx-font-size: 14;
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
